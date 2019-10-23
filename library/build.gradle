@@ -1,8 +1,10 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply from: '../dependencies.gradle'
-
 apply from: '../bintrayconfig.gradle'
+apply plugin: 'com.github.dcendents.android-maven'
+
+group = 'com.github.bestandroidteam'
 
 android {
   compileSdkVersion versions.compileSdk
