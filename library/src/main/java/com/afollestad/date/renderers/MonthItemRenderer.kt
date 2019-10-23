@@ -130,7 +130,7 @@ internal class MonthItemRenderer(private val config: DatePickerConfig) {
 
   private fun View.themeColorPrimary(): Int {
     val typedValue = TypedValue()
-    val attributes = context.obtainStyledAttributes(typedValue.data, intArrayOf(R.attr.colorAccent))
+    val attributes = context.obtainStyledAttributes(typedValue.data, intArrayOf(R.attr.colorPrimary))
     val color = attributes.getColor(0, 0)
     attributes.recycle()
     return color
