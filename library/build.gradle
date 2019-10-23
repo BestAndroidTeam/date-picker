@@ -4,7 +4,15 @@ apply from: '../dependencies.gradle'
 apply from: '../bintrayconfig.gradle'
 apply plugin: 'com.github.dcendents.android-maven'
 
+repositories {
+  mavenCentral()
+  google()
+  jcenter()
+  maven { url "https://jitpack.io" }
+}
+
 group = 'com.github.bestandroidteam'
+version = '1.0'
 
 android {
   compileSdkVersion versions.compileSdk
