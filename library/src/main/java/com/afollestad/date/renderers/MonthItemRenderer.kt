@@ -15,12 +15,15 @@
  */
 package com.afollestad.date.renderers
 
+import android.util.TypedValue
 import android.view.Gravity.CENTER
 import android.view.View
 import android.widget.TextView
 import com.afollestad.date.DatePickerConfig
+import com.afollestad.date.R
 import com.afollestad.date.data.DayOfWeek
 import com.afollestad.date.data.MonthItem
+import com.afollestad.date.data.MonthItem.Week
 import com.afollestad.date.data.MonthItem.DayOfMonth
 import com.afollestad.date.data.MonthItem.WeekHeader
 import com.afollestad.date.data.NO_DATE
@@ -30,6 +33,8 @@ import com.afollestad.date.util.Util.createTextSelector
 import com.afollestad.date.util.onClickDebounced
 import com.afollestad.date.util.resolveColor
 import java.util.Calendar
+
+
 
 /** @author Aidan Follestad (@afollestad) */
 internal class MonthItemRenderer(private val config: DatePickerConfig) {
@@ -44,6 +49,7 @@ internal class MonthItemRenderer(private val config: DatePickerConfig) {
     when (item) {
       is WeekHeader -> renderWeekHeader(item.dayOfWeek, textView)
       is DayOfMonth -> renderDayOfMonth(item, rootView, textView, onSelection)
+      is Week -> renderDayOfWeek(item,rootView, textView)
     }
   }
 
@@ -52,9 +58,17 @@ internal class MonthItemRenderer(private val config: DatePickerConfig) {
     textView: TextView
   ) {
     textView.apply {
-      setTextColor(context.resolveColor(android.R.attr.textColorSecondary))
-      calendar.dayOfWeek = dayOfWeek
-      text = config.dateFormatter.weekdayAbbreviation(calendar)
+      when(dayOfWeek){
+        DayOfWeek.WEEK_NUMBER -> {
+          text = ""
+          setTextColor(themeColorPrimary())
+        }
+        else -> {
+          calendar.dayOfWeek = dayOfWeek
+          text = config.dateFormatter.weekdayAbbreviation(calendar)
+          setTextColor(context.resolveColor(android.R.attr.textColorSecondary))
+        }
+      }
       typeface = config.normalFont
     }
   }
@@ -96,7 +110,29 @@ internal class MonthItemRenderer(private val config: DatePickerConfig) {
     }
   }
 
+  private fun renderDayOfWeek(
+    week: Week,
+    rootView: View,
+    textView: TextView
+  ) {
+    rootView.background = null
+    textView.apply {
+      setTextColor(rootView.themeColorPrimary())
+      text = week.weekNumber.toString()
+      typeface = config.normalFont
+    }
+
+  }
+
   private fun Int.positiveOrEmptyAsString(): String {
     return if (this < 1) "" else toString()
+  }
+
+  private fun View.themeColorPrimary(): Int {
+    val typedValue = TypedValue()
+    val attributes = context.obtainStyledAttributes(typedValue.data, intArrayOf(R.attr.colorAccent))
+    val color = attributes.getColor(0, 0)
+    attributes.recycle()
+    return color
   }
 }

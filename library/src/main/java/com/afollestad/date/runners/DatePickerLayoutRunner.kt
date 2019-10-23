@@ -172,7 +172,9 @@ internal class DatePickerLayoutRunner(
   fun onNavigate(
     onGoToPrevious: () -> Unit,
     onGoToNext: () -> Unit
-  ) = navigationLayoutRunner.onNavigate(onGoToPrevious, onGoToNext)
+  ) {
+    navigationLayoutRunner.onNavigate(onGoToPrevious, onGoToNext)
+  }
 
   companion object {
     @CheckResult fun inflateInto(

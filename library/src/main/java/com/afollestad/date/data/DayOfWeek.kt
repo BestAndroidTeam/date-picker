@@ -22,10 +22,12 @@ import com.afollestad.date.data.DayOfWeek.SUNDAY
 import com.afollestad.date.data.DayOfWeek.THURSDAY
 import com.afollestad.date.data.DayOfWeek.TUESDAY
 import com.afollestad.date.data.DayOfWeek.WEDNESDAY
+import com.afollestad.date.data.DayOfWeek.WEEK_NUMBER
 import java.util.Calendar
 
 /** @author Aidan Follestad (@afollestad) */
 internal enum class DayOfWeek(val rawValue: Int) {
+  WEEK_NUMBER(0),
   SUNDAY(Calendar.SUNDAY),
   MONDAY(Calendar.MONDAY),
   TUESDAY(Calendar.TUESDAY),
@@ -57,7 +59,8 @@ internal fun DayOfWeek.andTheRest(): List<DayOfWeek> {
 /** @author Aidan Follestad (@afollestad) */
 internal fun DayOfWeek.nextDayOfWeek(): DayOfWeek {
   return when (this) {
-    SUNDAY -> MONDAY
+    SUNDAY -> WEEK_NUMBER
+    WEEK_NUMBER -> SUNDAY
     MONDAY -> TUESDAY
     TUESDAY -> WEDNESDAY
     WEDNESDAY -> THURSDAY

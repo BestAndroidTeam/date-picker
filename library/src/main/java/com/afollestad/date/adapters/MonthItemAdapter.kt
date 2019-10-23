@@ -20,13 +20,13 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
-import com.afollestad.date.R
 import com.afollestad.date.data.MonthItem
 import com.afollestad.date.data.MonthItem.DayOfMonth
 import com.afollestad.date.data.MonthItem.WeekHeader
 import com.afollestad.date.data.applyDiffTo
 import com.afollestad.date.renderers.MonthItemRenderer
 import com.afollestad.date.util.inflate
+import com.afollestad.date.R
 
 /** @author Aidan Follestad (@afollestad) */
 internal class MonthItemViewHolder(
@@ -56,9 +56,9 @@ internal class MonthItemAdapter(
 
   override fun getItemViewType(position: Int): Int {
     return if (items?.get(position) is WeekHeader) {
-      R.layout.month_grid_header
+      R.layout.date_picker_month_grid_header
     } else {
-      R.layout.month_grid_item
+      R.layout.date_picker_month_grid_item
     }
   }
 

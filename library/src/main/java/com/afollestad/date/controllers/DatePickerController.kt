@@ -167,9 +167,15 @@ internal class DatePickerController(
   fun clearDateChangedListeners() = dateChangedListeners.clear()
 
   private fun render(fromUserEditInput: Boolean = false) {
-    viewingMonth?.let { renderHeaders(it, selectedDate!!, fromUserEditInput) }
-    selectedDate?.let { monthGraph!!.getMonthItems(it) }
-        ?.let { renderMonthItems(it) }
+    viewingMonth?.let {
+      renderHeaders(it, selectedDate!!, fromUserEditInput)
+    }
+    selectedDate?.let {
+      monthGraph!!.getMonthItems(it)
+    }
+        ?.let {
+          renderMonthItems(it)
+        }
   }
 
   private fun updateCurrentMonth(calendar: Calendar) {

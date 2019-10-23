@@ -22,10 +22,10 @@ import java.util.Locale
 
 /** @author Aidan Follestad (@afollestad) */
 internal class DateFormatter {
-  val dateInputFormatter = SimpleDateFormat("MM/dd/yyyy", Locale.getDefault())
+  val dateInputFormatter = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
   private val monthAndYearFormatter = SimpleDateFormat("MMMM yyyy", Locale.getDefault())
   private val yearFormatter = SimpleDateFormat("yyyy", Locale.getDefault())
-  private val dateFormatter = SimpleDateFormat("EEE, MMM dd", Locale.getDefault())
+  private val dateFormatter = SimpleDateFormat("EEE, dd MMM", Locale.getDefault())
   private val monthFormatter = SimpleDateFormat("MMMM", Locale.getDefault())
   private val weekdayFormatter = SimpleDateFormat("E", Locale.getDefault())
 

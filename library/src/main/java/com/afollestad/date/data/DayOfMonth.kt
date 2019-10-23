@@ -38,6 +38,12 @@ internal sealed class MonthItem {
     val isSelected: Boolean = false,
     val isToday: Boolean = false
   ) : MonthItem()
+
+
+  internal data class Week(
+    val weekNumber: Int
+  ) : MonthItem()
+
 }
 
 /** @author Aidan Follestad (@afollestad) */

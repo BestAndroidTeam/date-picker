@@ -19,6 +19,7 @@ import androidx.annotation.CheckResult
 import androidx.annotation.VisibleForTesting
 import com.afollestad.date.dayOfMonth
 import com.afollestad.date.dayOfWeek
+import com.afollestad.date.data.MonthItem.Week
 import com.afollestad.date.data.MonthItem.DayOfMonth
 import com.afollestad.date.data.MonthItem.WeekHeader
 import com.afollestad.date.month
@@ -46,20 +47,37 @@ internal class MonthGraph(
     val daysOfMonth = mutableListOf<MonthItem>()
     val month = calendar.snapshotMonth()
 
+      //Add Week!
+      daysOfMonth.add(WeekHeader(DayOfWeek.WEEK_NUMBER))
+
     // Add weekday headers
     daysOfMonth.addAll(
         orderedWeekDays
             .map { WeekHeader(it) }
     )
 
+      //Add first week
+      calendar.dayOfWeek
+      daysOfMonth.add(Week(calendar.get(Calendar.WEEK_OF_YEAR)))
+
+
     // Add prefix days first, days the lead up from last month to the first day of this
+      var emptyDays =orderedWeekDays
+          .takeWhile { it != firstWeekDayInMonth }
+          .map { DayOfMonth(it, month, isToday = false) }
+
+      var nbDaysAdded =emptyDays.size
     daysOfMonth.addAll(
-        orderedWeekDays
-            .takeWhile { it != firstWeekDayInMonth }
-            .map { DayOfMonth(it, month, isToday = false) }
+        emptyDays
     )
 
     for (date in 1..daysInMonth) {
+        //si on est en semaine mec
+        if(nbDaysAdded == 7){
+            daysOfMonth.add(Week(calendar.get(Calendar.WEEK_OF_YEAR) +1))
+            nbDaysAdded = 0
+        }
+
       calendar.dayOfMonth = date
       val dateSnapshot = DateSnapshot(calendar.month, date, calendar.year)
       daysOfMonth.add(
@@ -71,6 +89,7 @@ internal class MonthGraph(
               isSelected = selectedDate == dateSnapshot
           )
       )
+        nbDaysAdded++
     }
 
     if (daysOfMonth.size < EXPECTED_SIZE) {
@@ -93,13 +112,13 @@ internal class MonthGraph(
       })
     }
 
-    check(daysOfMonth.size == EXPECTED_SIZE) {
+    /*check(daysOfMonth.size == EXPECTED_SIZE) {
       "${daysOfMonth.size} must equal $EXPECTED_SIZE"
-    }
+    }*/
     return daysOfMonth
   }
 
   private companion object {
-    const val EXPECTED_SIZE: Int = 49
+    const val EXPECTED_SIZE: Int = 59
   }
 }

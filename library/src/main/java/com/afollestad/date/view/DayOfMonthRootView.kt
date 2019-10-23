@@ -20,9 +20,9 @@ import android.util.AttributeSet
 import android.view.View.MeasureSpec.EXACTLY
 import android.widget.FrameLayout
 import android.widget.TextView
-import com.afollestad.date.R
 import com.afollestad.date.util.dimenPx
 import com.afollestad.date.util.getFloat
+import com.afollestad.date.R
 
 /** @author Aidan Follestad (@afollestad) */
 internal class DayOfMonthRootView(

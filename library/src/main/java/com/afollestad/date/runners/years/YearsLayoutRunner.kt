@@ -23,8 +23,6 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.afollestad.date.DatePickerConfig
-import com.afollestad.date.R
-import com.afollestad.date.R.integer
 import com.afollestad.date.adapters.YearAdapter
 import com.afollestad.date.runners.Mode.CALENDAR
 import com.afollestad.date.runners.Mode.INPUT_EDIT
@@ -36,6 +34,8 @@ import com.afollestad.date.util.attachTopDivider
 import com.afollestad.date.util.invalidateTopDividerNow
 import com.afollestad.date.util.showOrConceal
 import com.afollestad.date.util.showOrHide
+import com.afollestad.date.R
+import com.afollestad.date.R.integer
 
 /** @author Aidan Follestad (@afollestad) */
 internal class YearsLayoutRunner(

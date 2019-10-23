@@ -41,7 +41,7 @@ import com.afollestad.date.util.showOrConceal
 import com.afollestad.date.util.showOrHide
 import com.afollestad.date.util.updatePadding
 
-internal const val DAYS_IN_WEEK = 7
+internal const val DAYS_IN_WEEK = 8
 
 /** @author Aidan Follestad (@afollestad) */
 internal class DatePickerCalendarLayoutRunner(
