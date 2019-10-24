@@ -27,23 +27,29 @@ import androidx.core.content.ContextCompat
 
 /** @author Aidan Follestad (@afollestad) */
 class VibratorController(private val context: Context) {
-  private val vibrator = context.getSystemService(VIBRATOR_SERVICE) as Vibrator
 
-  @SuppressLint("MissingPermission")
-  fun vibrateForSelection() {
-    if (hasPermission()) {
-      vibrator.vibrate(VIBRATION_DURATION)
+    private var mVibrator: Vibrator? = null
+    private fun getVibrator(): Vibrator? {
+        if (mVibrator == null)
+            mVibrator = context.getSystemService(VIBRATOR_SERVICE) as Vibrator?
+        return mVibrator
     }
-  }
 
-  private fun hasPermission(): Boolean {
-    return ContextCompat.checkSelfPermission(
-        context,
-        Manifest.permission.VIBRATE
-    ) == PERMISSION_GRANTED
-  }
+    @SuppressLint("MissingPermission")
+    fun vibrateForSelection() {
+        if (hasPermission()) {
+            getVibrator()?.vibrate(VIBRATION_DURATION)
+        }
+    }
 
-  private companion object {
-    const val VIBRATION_DURATION: Long = 15L
-  }
+    private fun hasPermission(): Boolean {
+        return ContextCompat.checkSelfPermission(
+            context,
+            Manifest.permission.VIBRATE
+        ) == PERMISSION_GRANTED
+    }
+
+    private companion object {
+        const val VIBRATION_DURATION: Long = 15L
+    }
 }
