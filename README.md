@@ -1,20 +1,28 @@
-# Date Picker
+# Date Picker (with week numbers)
 
-[ ![Bintray](https://api.bintray.com/packages/drummer-aidan/maven/date-picker/images/download.svg) ](https://bintray.com/drummer-aidan/maven/date-picker/_latestVersion)
-[![Build Status](https://travis-ci.org/afollestad/date-picker.svg)](https://travis-ci.org/afollestad/date-picker)
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/6d7ae4fee74247aa9f9a45946c9e2289)](https://www.codacy.com/app/drummeraidan_50/date-picker?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=afollestad/date-picker&amp;utm_campaign=Badge_Grade)
-[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
-<img src="https://raw.githubusercontent.com/afollestad/date-picker/master/art/showcase2.jpg" width="500" />
+<img src="https://raw.githubusercontent.com/bestandroidteam/date-picker/master/art/main_screenshot.jpg" width="500" />
 
 ---
 
 ### Gradle Dependency
 
+In your root build.gradle
+```gradle
+allprojects {
+    repositories {
+        ...
+        mavenCentral()
+        maven { url "https://jitpack.io" }
+    }
+}
+```
+
+In your module build.gradle
 ```gradle
 dependencies {
   ...
-  implementation 'com.afollestad:date-picker:0.6.1'
+  implementation 'com.github.bestandroidteam:date-picker:v1.4'
 }
 ```
 
