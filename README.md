@@ -1,7 +1,7 @@
 # Date Picker (with week numbers)
 
 
-<img src="https://raw.githubusercontent.com/bestandroidteam/date-picker/master/art/main_screenshot.jpg" width="500" />
+<img src="https://raw.githubusercontent.com/bestandroidteam/date-picker/master/art/main_screenshots.jpg" width="500" />
 
 ---
 
