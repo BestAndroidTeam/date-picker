@@ -22,10 +22,12 @@ import com.afollestad.date.dayOfWeek
 import com.afollestad.date.data.MonthItem.Week
 import com.afollestad.date.data.MonthItem.DayOfMonth
 import com.afollestad.date.data.MonthItem.WeekHeader
-import com.afollestad.date.month
 import com.afollestad.date.data.snapshot.DateSnapshot
 import com.afollestad.date.data.snapshot.snapshot
 import com.afollestad.date.data.snapshot.snapshotMonth
+import com.afollestad.date.dayOfMonth
+import com.afollestad.date.dayOfWeek
+import com.afollestad.date.month
 import com.afollestad.date.totalDaysInMonth
 import com.afollestad.date.year
 import java.util.Calendar
