@@ -22,7 +22,6 @@ import com.afollestad.date.DatePickerConfig
 import com.afollestad.date.R
 import com.afollestad.date.data.DayOfWeek
 import com.afollestad.date.data.MonthItem
-import com.afollestad.date.data.MonthItem.*
 import com.afollestad.date.data.NO_DATE
 import com.afollestad.date.dayOfWeek
 import com.afollestad.date.util.Util.createCircularSelector
@@ -40,12 +39,12 @@ internal class MonthItemRenderer(private val config: DatePickerConfig) {
     item: MonthItem,
     rootView: View,
     textView: TextView,
-    onSelection: (DayOfMonth) -> Unit
+    onSelection: (MonthItem.DayOfMonth) -> Unit
   ) {
     when (item) {
-      is WeekHeader -> renderWeekHeader(item.dayOfWeek, textView)
-      is DayOfMonth -> renderDayOfMonth(item, rootView, textView, onSelection)
-      is Week -> renderDayOfWeek(item,rootView, textView)
+      is MonthItem.WeekHeader -> renderWeekHeader(item.dayOfWeek, textView)
+      is MonthItem.DayOfMonth -> renderDayOfMonth(item, rootView, textView, onSelection)
+      is MonthItem.Week -> renderDayOfWeek(item,rootView, textView)
     }
   }
 
@@ -70,10 +69,10 @@ internal class MonthItemRenderer(private val config: DatePickerConfig) {
   }
 
   private fun renderDayOfMonth(
-    dayOfMonth: DayOfMonth,
+    dayOfMonth: MonthItem.DayOfMonth,
     rootView: View,
     textView: TextView,
-    onSelection: (DayOfMonth) -> Unit
+    onSelection: (MonthItem.DayOfMonth) -> Unit
   ) {
     rootView.background = null
     textView.apply {
@@ -107,7 +106,7 @@ internal class MonthItemRenderer(private val config: DatePickerConfig) {
   }
 
   private fun renderDayOfWeek(
-    week: Week,
+    week: MonthItem.Week,
     rootView: View,
     textView: TextView
   ) {
