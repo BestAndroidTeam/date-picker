@@ -30,7 +30,6 @@ import com.afollestad.date.util.onClickDebounced
 import com.afollestad.date.util.resolveColor
 import java.util.Calendar
 
-
 /** @author Aidan Follestad (@afollestad) */
 internal class MonthItemRenderer(private val config: DatePickerConfig) {
   private val calendar = Calendar.getInstance()
@@ -44,7 +43,7 @@ internal class MonthItemRenderer(private val config: DatePickerConfig) {
     when (item) {
       is MonthItem.WeekHeader -> renderWeekHeader(item.dayOfWeek, textView)
       is MonthItem.DayOfMonth -> renderDayOfMonth(item, rootView, textView, onSelection)
-      is MonthItem.Week -> renderDayOfWeek(item,rootView, textView)
+      is MonthItem.Week -> renderDayOfWeek(item, rootView, textView)
     }
   }
 
@@ -53,7 +52,7 @@ internal class MonthItemRenderer(private val config: DatePickerConfig) {
     textView: TextView
   ) {
     textView.apply {
-      when(dayOfWeek){
+      when (dayOfWeek) {
         DayOfWeek.WEEK_NUMBER -> {
           text = ""
           setTextColor(context.resolveColor(R.attr.colorAccent))
@@ -116,7 +115,6 @@ internal class MonthItemRenderer(private val config: DatePickerConfig) {
       text = week.weekNumber.toString()
       typeface = config.normalFont
     }
-
   }
 
   private fun Int.positiveOrEmptyAsString(): String {

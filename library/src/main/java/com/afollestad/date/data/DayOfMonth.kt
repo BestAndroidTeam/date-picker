@@ -39,11 +39,9 @@ internal sealed class MonthItem {
     val isToday: Boolean = false
   ) : MonthItem()
 
-
   internal data class Week(
     val weekNumber: Int
   ) : MonthItem()
-
 }
 
 /** @author Aidan Follestad (@afollestad) */

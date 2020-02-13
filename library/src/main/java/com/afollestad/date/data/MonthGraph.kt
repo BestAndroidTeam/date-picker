@@ -17,10 +17,8 @@ package com.afollestad.date.data
 
 import androidx.annotation.CheckResult
 import androidx.annotation.VisibleForTesting
-import com.afollestad.date.dayOfMonth
-import com.afollestad.date.dayOfWeek
-import com.afollestad.date.data.MonthItem.Week
 import com.afollestad.date.data.MonthItem.DayOfMonth
+import com.afollestad.date.data.MonthItem.Week
 import com.afollestad.date.data.MonthItem.WeekHeader
 import com.afollestad.date.data.snapshot.DateSnapshot
 import com.afollestad.date.data.snapshot.snapshot
@@ -49,7 +47,7 @@ internal class MonthGraph(
     val daysOfMonth = mutableListOf<MonthItem>()
     val month = calendar.snapshotMonth()
 
-      //Add Week!
+      // Add Week!
       daysOfMonth.add(WeekHeader(DayOfWeek.WEEK_NUMBER))
 
     // Add weekday headers
@@ -58,25 +56,24 @@ internal class MonthGraph(
             .map { WeekHeader(it) }
     )
 
-      //Add first week
+      // Add first week
       calendar.dayOfWeek
       daysOfMonth.add(Week(calendar.get(Calendar.WEEK_OF_YEAR)))
 
-
     // Add prefix days first, days the lead up from last month to the first day of this
-      var emptyDays =orderedWeekDays
+      var emptyDays = orderedWeekDays
           .takeWhile { it != firstWeekDayInMonth }
           .map { DayOfMonth(it, month, isToday = false) }
 
-      var nbDaysAdded =emptyDays.size
+      var nbDaysAdded = emptyDays.size
     daysOfMonth.addAll(
         emptyDays
     )
 
     for (date in 1..daysInMonth) {
-        //si on est en semaine mec
-        if(nbDaysAdded == 7){
-            daysOfMonth.add(Week(calendar.get(Calendar.WEEK_OF_YEAR) +1))
+        // si on est en semaine mec
+        if (nbDaysAdded == 7) {
+            daysOfMonth.add(Week(calendar.get(Calendar.WEEK_OF_YEAR) + 1))
             nbDaysAdded = 0
         }
 
