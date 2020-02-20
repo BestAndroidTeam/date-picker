@@ -33,7 +33,7 @@ import com.afollestad.date.renderers.MonthItemRenderer
 import com.afollestad.date.runners.DatePickerLayoutRunner
 import com.afollestad.date.view.DatePickerSavedState
 import java.lang.Long.MAX_VALUE
-import java.util.*
+import java.util.Calendar
 
 typealias OnDateChanged = (previous: Calendar, date: Calendar) -> Unit
 
