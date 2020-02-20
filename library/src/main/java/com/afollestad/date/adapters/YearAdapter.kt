@@ -15,6 +15,7 @@
  */
 package com.afollestad.date.adapters
 
+import android.graphics.Color
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
@@ -44,6 +45,7 @@ internal class YearViewHolder(
 /** @author Aidan Follestad (@afollestad) */
 internal class YearAdapter(
   private val config: DatePickerConfig,
+  private val isInBounds: (year: Int) -> Boolean,
   private val onSelection: (year: Int) -> Unit
 ) : RecyclerView.Adapter<YearViewHolder>() {
 
@@ -91,13 +93,17 @@ internal class YearAdapter(
     holder.itemView.isSelected = isSelected
     holder.textView.text = currentYear.toString()
     holder.textView.typeface = config.normalFont
+    holder.textView.setTextColor(if (isInBounds(currentYear)) Color.BLACK else Color.GRAY)
   }
 
   fun getSelectedPosition(): Int? = selectedYear?.asPosition()
 
   internal fun onRowClicked(position: Int) {
-    this.selectedYear = position.asYear()
-        .also { onSelection(it) }
+    val currentYear = position.asYear()
+    if (isInBounds(currentYear)) {
+      selectedYear = currentYear
+      onSelection(currentYear)
+    }
   }
 
   /**

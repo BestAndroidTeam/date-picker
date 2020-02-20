@@ -33,14 +33,21 @@ import com.afollestad.date.renderers.MonthItemRenderer
 import com.afollestad.date.runners.DatePickerLayoutRunner
 import com.afollestad.date.view.DatePickerSavedState
 import java.lang.Long.MAX_VALUE
-import java.util.Calendar
+import java.util.*
 
 typealias OnDateChanged = (previous: Calendar, date: Calendar) -> Unit
 
 /** @author Aidan Follestad (@afollestad) */
-class DatePicker(
+
+class DatePicker
+// TODO NEW {
+@JvmOverloads
+constructor(
   context: Context,
-  attrs: AttributeSet?
+  attrs: AttributeSet?,
+  baseDate: Calendar = Calendar.getInstance(),
+  var minDate: Calendar? = null,
+  var maxDate: Calendar? = null
 ) : ViewGroup(context, attrs) {
   private var datePickerConfig = DatePickerConfig.create(context, attrs)
 
@@ -53,25 +60,61 @@ class DatePicker(
 
   init {
     layoutRunner = DatePickerLayoutRunner.inflateInto(
-        context = context,
-        config = datePickerConfig,
-        container = this,
-        onDateInput = ::maybeSetDateFromInput
+      context = context,
+      config = datePickerConfig,
+      container = this,
+      onDateInput = ::maybeSetDateFromInput
     )
     controller = DatePickerController(
-        config = datePickerConfig,
-        renderHeaders = layoutRunner::setHeadersContent,
-        renderMonthItems = ::renderMonthItems
+      config = datePickerConfig,
+      renderHeaders = layoutRunner::setHeadersContent,
+      renderMonthItems = ::renderMonthItems
     )
 
     monthItemRenderer = MonthItemRenderer(datePickerConfig)
-    monthItemAdapter = MonthItemAdapter(itemRenderer = monthItemRenderer) {
-      controller.setDayOfMonth(it.date)
+    monthItemAdapter = MonthItemAdapter(
+      itemRenderer = monthItemRenderer,
+      isInBounds = ::isDayOfMonthInBounds
+    ) {
+      if (isDayOfMonthInBounds(it)) {
+        controller.setDayOfMonth(it.date)
+      }
     }
-    yearAdapter = YearAdapter(datePickerConfig) { controller.setYear(it) }
+    yearAdapter = YearAdapter(
+      datePickerConfig,
+      isInBounds = ::isYearInBounds
+    ) {
+      if (isYearInBounds(it)) {
+        controller.setYear(it)
+      }
+    }
 
     layoutRunner.setAdapters(monthItemAdapter, yearAdapter)
   }
+
+  private fun isDayOfMonthInBounds(dayOfMonth: DayOfMonth): Boolean {
+    return controller.getFullDate()?.clone()?.let {
+      (it as Calendar).set(Calendar.YEAR, controller.viewingMonth?.year ?: it.year)
+      (it as Calendar).set(Calendar.MONTH, controller.viewingMonth?.month ?: it.month)
+      (it as Calendar).set(Calendar.DAY_OF_MONTH, dayOfMonth.date)
+      isInBounds(it)
+    } ?: true
+  }
+
+  private fun isYearInBounds(year: Int): Boolean {
+    return controller.getFullDate()?.clone()?.let {
+      //      (it as Calendar).set(Calendar.MONTH, controller.viewingMonth?.month ?: it.month)
+      (it as Calendar).set(Calendar.YEAR, year)
+      isInBounds(it)
+    } ?: true
+  }
+
+  private fun isInBounds(calendar: Calendar): Boolean {
+    minDate?.let { if (calendar.before(it)) return false }
+    maxDate?.let { if (calendar.after(it)) return false }
+    return true
+  }
+  // TODO NEW }
 
   /** Sets the date displayed in the view, along with the selected date. */
   fun setDate(
@@ -86,7 +129,7 @@ class DatePicker(
     @IntRange(from = DAY_MIN, to = DAY_MAX) selectedDate: Int? = null,
     notifyListeners: Boolean = true
   ) = controller.setFullDate(
-      year = year, month = month, selectedDate = selectedDate, notifyListeners = notifyListeners
+    year = year, month = month, selectedDate = selectedDate, notifyListeners = notifyListeners
   )
 
   /** Gets the selected date, if any. */
@@ -118,8 +161,8 @@ class DatePicker(
   override fun onFinishInflate() {
     super.onFinishInflate()
     layoutRunner.onNavigate(
-        controller::previousMonth,
-        controller::nextMonth
+      controller::previousMonth,
+      controller::nextMonth
     )
   }
 
@@ -128,7 +171,7 @@ class DatePicker(
     heightMeasureSpec: Int
   ) {
     layoutRunner.measure(widthMeasureSpec, heightMeasureSpec, 0)
-        .let { (width, height) -> setMeasuredDimension(width, height) }
+      .let { (width, height) -> setMeasuredDimension(width, height) }
   }
 
   @SuppressLint("CheckResult")
@@ -140,20 +183,20 @@ class DatePicker(
     bottom: Int
   ) {
     layoutRunner.layout(
-        top = 0,
-        left = 0,
-        right = measuredWidth,
-        parentWidth = measuredWidth
+      top = 0,
+      left = 0,
+      right = measuredWidth,
+      parentWidth = measuredWidth
     )
   }
 
   private fun renderMonthItems(days: List<MonthItem>) {
     val firstDayOfMonth = days.first { it is DayOfMonth } as DayOfMonth
     yearAdapter.selectedYear = firstDayOfMonth
-        .month
-        .year
+      .month
+      .year
     yearAdapter.getSelectedPosition()
-        ?.let(layoutRunner::scrollToYearPosition)
+      ?.let(layoutRunner::scrollToYearPosition)
     monthItemAdapter.items = days
   }
 

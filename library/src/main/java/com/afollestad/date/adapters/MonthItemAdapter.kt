@@ -15,6 +15,7 @@
  */
 package com.afollestad.date.adapters
 
+import android.graphics.Color
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
@@ -38,6 +39,7 @@ internal class MonthItemViewHolder(
 /** @author Aidan Follestad (@afollestad) */
 internal class MonthItemAdapter(
   private val itemRenderer: MonthItemRenderer,
+  private val isInBounds: (day: DayOfMonth) -> Boolean,
   private val onSelection: (day: DayOfMonth) -> Unit
 ) : RecyclerView.Adapter<MonthItemViewHolder>() {
 
@@ -77,5 +79,8 @@ internal class MonthItemAdapter(
   ) {
     val item = items?.get(position) ?: error("Impossible!")
     itemRenderer.render(item, holder.itemView, holder.textView, onSelection)
+    if (item is DayOfMonth) {
+      holder.textView.setTextColor(if (isInBounds(item)) Color.BLACK else Color.GRAY)
+    }
   }
 }
