@@ -44,6 +44,14 @@ internal class MonthGraph(
       .andTheRest()
 
   @CheckResult fun getMonthItems(selectedDate: DateSnapshot): List<MonthItem> {
+    //on réinit le calendar:
+    calendar.apply { dayOfMonth = 1 }
+    daysInMonth = calendar.totalDaysInMonth
+    firstWeekDayInMonth = calendar.dayOfWeek
+    orderedWeekDays = calendar.firstDayOfWeek
+      .asDayOfWeek()
+      .andTheRest()
+
     val daysOfMonth = mutableListOf<MonthItem>()
     val month = calendar.snapshotMonth()
 

@@ -6,6 +6,7 @@ buildscript {
   repositories {
     google()
     jcenter()
+    mavenCentral()
   }
   dependencies {
     classpath deps.gradle_plugins.android
@@ -18,8 +19,12 @@ buildscript {
 
 allprojects {
   repositories {
+    maven { url "https://maven.google.com" }
+    maven { url 'https://jitpack.io' }
+    maven { url "https://dl.bintray.com/rmrspb/android-maven" }
     google()
     jcenter()
+    mavenCentral()
   }
 }
 
