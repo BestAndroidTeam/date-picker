@@ -17,17 +17,23 @@ package com.afollestad.date.data
 
 import androidx.annotation.CheckResult
 import androidx.annotation.VisibleForTesting
-import com.afollestad.date.*
-import com.afollestad.date.data.MonthItem.*
+import com.afollestad.date.data.MonthItem.DayOfMonth
+import com.afollestad.date.data.MonthItem.Week
+import com.afollestad.date.data.MonthItem.WeekHeader
 import com.afollestad.date.data.snapshot.DateSnapshot
 import com.afollestad.date.data.snapshot.snapshot
 import com.afollestad.date.data.snapshot.snapshotMonth
-import java.util.*
+import com.afollestad.date.dayOfMonth
+import com.afollestad.date.dayOfWeek
+import com.afollestad.date.month
+import com.afollestad.date.totalDaysInMonth
+import com.afollestad.date.year
+import java.util.Calendar
 
 /** @author Aidan Follestad (@afollestad) */
 internal class MonthGraph(
-    initialCalendar: Calendar,
-    @VisibleForTesting today: Calendar = Calendar.getInstance()
+  initialCalendar: Calendar,
+  @VisibleForTesting today: Calendar = Calendar.getInstance()
 ) {
     private val today: DateSnapshot = today.snapshot()
 
@@ -45,7 +51,7 @@ internal class MonthGraph(
 
     @CheckResult
     fun getMonthItems(selectedDate: DateSnapshot): List<MonthItem> {
-        //on réinit le calendar:
+        // on réinit le calendar:
         calendar.apply { dayOfMonth = 1 }
         daysInMonth = calendar.totalDaysInMonth
         firstWeekDayInMonth = calendar.dayOfWeek
