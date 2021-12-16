@@ -17,115 +17,116 @@ package com.afollestad.date.data
 
 import androidx.annotation.CheckResult
 import androidx.annotation.VisibleForTesting
-import com.afollestad.date.data.MonthItem.DayOfMonth
-import com.afollestad.date.data.MonthItem.Week
-import com.afollestad.date.data.MonthItem.WeekHeader
+import com.afollestad.date.*
+import com.afollestad.date.data.MonthItem.*
 import com.afollestad.date.data.snapshot.DateSnapshot
 import com.afollestad.date.data.snapshot.snapshot
 import com.afollestad.date.data.snapshot.snapshotMonth
-import com.afollestad.date.dayOfMonth
-import com.afollestad.date.dayOfWeek
-import com.afollestad.date.month
-import com.afollestad.date.totalDaysInMonth
-import com.afollestad.date.year
-import java.util.Calendar
+import java.util.*
 
 /** @author Aidan Follestad (@afollestad) */
 internal class MonthGraph(
-  initialCalendar: Calendar,
-  @VisibleForTesting today: Calendar = Calendar.getInstance()
+    initialCalendar: Calendar,
+    @VisibleForTesting today: Calendar = Calendar.getInstance()
 ) {
-  private val today: DateSnapshot = today.snapshot()
-  @VisibleForTesting val calendar = (initialCalendar.clone() as Calendar).apply { dayOfMonth = 1 }
-  @VisibleForTesting var daysInMonth: Int = calendar.totalDaysInMonth
-  @VisibleForTesting var firstWeekDayInMonth: DayOfWeek = calendar.dayOfWeek
-  var orderedWeekDays: List<DayOfWeek> = calendar.firstDayOfWeek
-      .asDayOfWeek()
-      .andTheRest()
+    private val today: DateSnapshot = today.snapshot()
 
-  @CheckResult fun getMonthItems(selectedDate: DateSnapshot): List<MonthItem> {
-    //on réinit le calendar:
-    calendar.apply { dayOfMonth = 1 }
-    daysInMonth = calendar.totalDaysInMonth
-    firstWeekDayInMonth = calendar.dayOfWeek
-    orderedWeekDays = calendar.firstDayOfWeek
-      .asDayOfWeek()
-      .andTheRest()
+    @VisibleForTesting
+    val calendar = (initialCalendar.clone() as Calendar).apply { dayOfMonth = 1 }
 
-    val daysOfMonth = mutableListOf<MonthItem>()
-    val month = calendar.snapshotMonth()
+    @VisibleForTesting
+    var daysInMonth: Int = calendar.totalDaysInMonth
 
-      // Add Week!
-      daysOfMonth.add(WeekHeader(DayOfWeek.WEEK_NUMBER))
+    @VisibleForTesting
+    var firstWeekDayInMonth: DayOfWeek = calendar.dayOfWeek
+    var orderedWeekDays: List<DayOfWeek> = calendar.firstDayOfWeek
+        .asDayOfWeek()
+        .andTheRest()
 
-    // Add weekday headers
-    daysOfMonth.addAll(
-        orderedWeekDays
-            .map { WeekHeader(it) }
-    )
+    @CheckResult
+    fun getMonthItems(selectedDate: DateSnapshot): List<MonthItem> {
+        //on réinit le calendar:
+        calendar.apply { dayOfMonth = 1 }
+        daysInMonth = calendar.totalDaysInMonth
+        firstWeekDayInMonth = calendar.dayOfWeek
+        orderedWeekDays = calendar.firstDayOfWeek
+            .asDayOfWeek()
+            .andTheRest()
 
-      // Add first week
-      calendar.dayOfWeek
-      daysOfMonth.add(Week(calendar.get(Calendar.WEEK_OF_YEAR)))
+        val daysOfMonth = mutableListOf<MonthItem>()
+        val month = calendar.snapshotMonth()
 
-    // Add prefix days first, days the lead up from last month to the first day of this
-      var emptyDays = orderedWeekDays
-          .takeWhile { it != firstWeekDayInMonth }
-          .map { DayOfMonth(it, month, isToday = false) }
+        // Add Week!
+        daysOfMonth.add(WeekHeader(DayOfWeek.WEEK_NUMBER))
 
-      var nbDaysAdded = emptyDays.size
-    daysOfMonth.addAll(
-        emptyDays
-    )
+        // Add weekday headers
+        daysOfMonth.addAll(
+            orderedWeekDays
+                .map { WeekHeader(it) }
+        )
 
-    for (date in 1..daysInMonth) {
-        // si on est en semaine mec
-        if (nbDaysAdded == 7) {
-            daysOfMonth.add(Week(calendar.get(Calendar.WEEK_OF_YEAR) + 1))
-            nbDaysAdded = 0
+        // Add first week
+        calendar.dayOfWeek
+        daysOfMonth.add(Week(calendar.get(Calendar.WEEK_OF_YEAR)))
+
+        // Add prefix days first, days the lead up from last month to the first day of this
+        var emptyDays = orderedWeekDays
+            .takeWhile { it != firstWeekDayInMonth }
+            .map { DayOfMonth(it, month, isToday = false) }
+
+        var nbDaysAdded = emptyDays.size
+        daysOfMonth.addAll(
+            emptyDays
+        )
+
+        for (date in 1..daysInMonth) {
+            // si on est en semaine mec
+            if (nbDaysAdded == 7) {
+                daysOfMonth.add(Week(calendar.get(Calendar.WEEK_OF_YEAR) + 1))
+                nbDaysAdded = 0
+            }
+
+            calendar.dayOfMonth = date
+            val dateSnapshot = DateSnapshot(calendar.month, date, calendar.year)
+            daysOfMonth.add(
+                DayOfMonth(
+                    dayOfWeek = calendar.dayOfWeek,
+                    month = month,
+                    date = date,
+                    isToday = dateSnapshot == today,
+                    isSelected = selectedDate == dateSnapshot
+                )
+            )
+            nbDaysAdded++
         }
 
-      calendar.dayOfMonth = date
-      val dateSnapshot = DateSnapshot(calendar.month, date, calendar.year)
-      daysOfMonth.add(
-          DayOfMonth(
-              dayOfWeek = calendar.dayOfWeek,
-              month = month,
-              date = date,
-              isToday = dateSnapshot == today,
-              isSelected = selectedDate == dateSnapshot
-          )
-      )
-        nbDaysAdded++
+        if (daysOfMonth.size < EXPECTED_SIZE) {
+            // Fill in remaining days of week
+            val loopTarget = orderedWeekDays.last()
+                .nextDayOfWeek()
+            daysOfMonth.addAll(
+                (daysOfMonth.last() as DayOfMonth)
+                    .dayOfWeek
+                    .nextDayOfWeek()
+                    .andTheRest()
+                    .takeWhile { it != loopTarget }
+                    .map { DayOfMonth(it, month, isToday = false) }
+            )
+        }
+        // Make sure we fill up 6 weeks worth of dates
+        while (daysOfMonth.size < EXPECTED_SIZE) {
+            daysOfMonth.addAll(orderedWeekDays.map {
+                DayOfMonth(it, month, isToday = false)
+            })
+        }
+
+        /*check(daysOfMonth.size == EXPECTED_SIZE) {
+          "${daysOfMonth.size} must equal $EXPECTED_SIZE"
+        }*/
+        return daysOfMonth
     }
 
-    if (daysOfMonth.size < EXPECTED_SIZE) {
-      // Fill in remaining days of week
-      val loopTarget = orderedWeekDays.last()
-          .nextDayOfWeek()
-      daysOfMonth.addAll(
-          (daysOfMonth.last() as DayOfMonth)
-              .dayOfWeek
-              .nextDayOfWeek()
-              .andTheRest()
-              .takeWhile { it != loopTarget }
-              .map { DayOfMonth(it, month, isToday = false) }
-      )
+    private companion object {
+        const val EXPECTED_SIZE: Int = 59
     }
-    // Make sure we fill up 6 weeks worth of dates
-    while (daysOfMonth.size < EXPECTED_SIZE) {
-      daysOfMonth.addAll(orderedWeekDays.map {
-        DayOfMonth(it, month, isToday = false)
-      })
-    }
-
-    /*check(daysOfMonth.size == EXPECTED_SIZE) {
-      "${daysOfMonth.size} must equal $EXPECTED_SIZE"
-    }*/
-    return daysOfMonth
-  }
-
-  private companion object {
-    const val EXPECTED_SIZE: Int = 59
-  }
 }
