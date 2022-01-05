@@ -72,7 +72,7 @@ internal class MonthGraph(
         )
 
         // Add first week
-        //calendar.dayOfWeek
+        // calendar.dayOfWeek
         daysOfMonth.add(Week(calendar.get(Calendar.WEEK_OF_YEAR)))
 
         // Add prefix days first, days the lead up from last month to the first day of this
