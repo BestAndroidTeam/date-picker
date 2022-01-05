@@ -72,7 +72,7 @@ internal class MonthGraph(
         )
 
         // Add first week
-        calendar.dayOfWeek
+        //calendar.dayOfWeek
         daysOfMonth.add(Week(calendar.get(Calendar.WEEK_OF_YEAR)))
 
         // Add prefix days first, days the lead up from last month to the first day of this
@@ -86,13 +86,13 @@ internal class MonthGraph(
         )
 
         for (date in 1..daysInMonth) {
+            calendar.dayOfMonth = date
             // si on est en semaine mec
             if (nbDaysAdded == 7) {
-                daysOfMonth.add(Week(calendar.get(Calendar.WEEK_OF_YEAR) + 1))
-                nbDaysAdded = 0
+              daysOfMonth.add(Week(calendar.get(Calendar.WEEK_OF_YEAR)))
+              nbDaysAdded = 0
             }
 
-            calendar.dayOfMonth = date
             val dateSnapshot = DateSnapshot(calendar.month, date, calendar.year)
             daysOfMonth.add(
                 DayOfMonth(
