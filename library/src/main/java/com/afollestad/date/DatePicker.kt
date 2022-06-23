@@ -47,7 +47,8 @@ constructor(
   attrs: AttributeSet?,
   baseDate: Calendar = Calendar.getInstance(),
   var minDate: Calendar? = null,
-  var maxDate: Calendar? = null
+  var maxDate: Calendar? = null,
+  var disabledDays: List<Int>? = null
 ) : ViewGroup(context, attrs) {
   private var datePickerConfig = DatePickerConfig.create(context, attrs)
 
@@ -112,6 +113,7 @@ constructor(
   private fun isInBounds(calendar: Calendar): Boolean {
     minDate?.let { if (calendar.before(it)) return false }
     maxDate?.let { if (calendar.after(it)) return false }
+    disabledDays?.forEach { if (Calendar.DAY_OF_WEEK == it) return false }
     return true
   }
   // TODO NEW }
@@ -133,7 +135,8 @@ constructor(
   )
 
   /** Gets the selected date, if any. */
-  @CheckResult fun getDate(): Calendar? = controller.getFullDate()
+  @CheckResult
+  fun getDate(): Calendar? = controller.getFullDate()
 
   /** Appends a listener that is invoked when the selected date changes. */
   fun addOnDateChanged(block: OnDateChanged) = controller.addDateChangedListener(block)
