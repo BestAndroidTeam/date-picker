@@ -113,7 +113,7 @@ constructor(
   private fun isInBounds(calendar: Calendar): Boolean {
     minDate?.let { if (calendar.before(it)) return false }
     maxDate?.let { if (calendar.after(it)) return false }
-    disabledDays?.forEach { if (Calendar.DAY_OF_WEEK == it) return false }
+    if (disabledDays?.contains(calendar.get(Calendar.DAY_OF_WEEK)) == true) return false
     return true
   }
   // TODO NEW }
